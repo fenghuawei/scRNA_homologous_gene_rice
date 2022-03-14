@@ -1,0 +1,37 @@
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(Matrix)
+library(Seurat)
+library(cowplot)
+library(scatterplot3d)
+library(DoubletFinder)
+library(tibble)
+library(patchwork)
+library(data.table)
+sample.tmp  <- Read10X_h5("Leaf-2/outs/filtered_feature_bc_matrix.h5")
+rds<- CreateSeuratObject(counts = sample.tmp, assay = "RNA" ,min.cells = 3,min.features=100, project =
+ "rice-leaf")
+rds <- NormalizeData(rds, assay = "RNA", normalization.method = "LogNormalize", scale.factor = 10000, verbose = TRUE,margin=2)
+rds <- FindVariableFeatures(rds, selection.method = "vst",num.bin     = 50,binning.method = "equal_width",nfeatures = 2000,mean.cutoff = c(0.1, 8), dispersion.cutoff = c(1, Inf),verbose     = TRUE,array="RNA")
+ all.genes <- rownames(rds)
+ rds    <- ScaleData(object=rds,features=all.genes)
+data.integrated <- FindNeighbors(data.integrated, dims = 1:10)
+data.integrated <- FindClusters(data.integrated, resolution = 0.8)
+data.integrated <- RunTSNE(data.integrated,verbose=TRUE,check_duplicates=FALSE)
+ data.integrated <- RunUMAP(data.integrated,dims=1:10)
+saveRDS(data.integrated,file="rice.Rdata")
+png("UMAP_GS3.png")
+
+
+
+> FeaturePlot(data.integrated, features = c("Os03g0407400"), max.cutoff = 3, cols = c("grey","red"))
+> dev.off()
+null device 
+          1 
+> png("UMAP_GW5.png")
+> FeaturePlot(data.integrated, features = c("Os05g0187500"), max.cutoff = 3, cols = c("grey","red"))
+> dev.off()
+
+

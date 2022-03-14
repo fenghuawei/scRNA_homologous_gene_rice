@@ -1,0 +1,8 @@
+#!/bin/bash
+#SBATCH -o job.%j.out
+#SBATCH -p xhacexclu02
+#SBATCH --qos=low
+#SBATCH -J myFirstJob
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+ cellranger count  --transcriptome=/public/frasergen/MED/work/fenghuawei/practice/gsa_big/download.big.ac.cn/gsa/CRA004082/CRR279091/output_genome  --id=Leaf-2 --fastqs=/public/frasergen/MED/work/fenghuawei/practice/gsa_big/download.big.ac.cn/gsa/CRA004082/CRR279091 --sample=Leaf-2 --expect-cells=5000    --localcores=8
